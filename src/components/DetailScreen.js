@@ -79,9 +79,13 @@ trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedSt
           <View style={{flex: 1, padding: 20}}>
           
             <ActivityIndicator/>
-            <Button title="Muat Ulang"
+            
+            <Text 
+            style={{textAlign:'center'}}
             onPress={()=>{this.fetch()}}
-            />
+            >
+            Load Again
+            </Text>
           </View>
     )
   }

@@ -102,12 +102,16 @@ class HomeScreen extends Component {
     })
     .catch((err)=>{
       // console.error(err);
-      Alert.alert('Info','Gagal Memuat berita');
+
     })
 
   }
   componentDidMount(){
     this.fetch();
+  }
+
+  funct(){
+    Alert.alert('a','i');
   }
   render() {
     
@@ -123,9 +127,15 @@ class HomeScreen extends Component {
           <View style={{flex: 1, padding: 20}}>
           
             <ActivityIndicator/>
-            <Button title="Muat Ulang"
+
+
+            <Text 
+            style={{textAlign:'center'}}
             onPress={()=>{this.fetch()}}
-            />
+            >
+            Load Again
+            </Text>
+
           </View>
     )
   }
