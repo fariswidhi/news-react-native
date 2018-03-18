@@ -26,6 +26,7 @@ class DrawerMenu extends Component {
     //     }
     // });
     // AsyncStorage.removeItem('data');
+              this.getAsync();
   }
 
   alert(){
@@ -84,11 +85,13 @@ class DrawerMenu extends Component {
 
     getAsync(){
       AsyncStorage.getItem('data',(err,result)=>{
+
         if (result) {
           this.setState({
               dataSource: JSON.parse(result),
               refreshing: false
           });
+          // Alert.alert('d','d = '+JSON.stringify(result));
         }
         else{
           this.fetch();
@@ -108,9 +111,19 @@ class DrawerMenu extends Component {
   render() {
     return (
       <View style={styles.container}>
-      <Text>
+<View
+style={{height:50,backgroundColor:'white'}}
 
-      </Text>
+/>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={()=>{
+            this.props.navigation.navigate('HomeScreen')
+          }}
+        >
+          <Text style={styles.menuItemText}>Home</Text>
+        </TouchableOpacity>
+
       <FlatList
 style={{flexDirection: 'column'}}
 numColumns={1}
@@ -140,7 +153,7 @@ keyExtractor={(item, index) => index.toString()}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 100
+    backgroundColor: '#fff'
   },
   menuItem: {
     padding: 10,
@@ -148,7 +161,8 @@ const styles = StyleSheet.create({
     marginBottom: 2
   },
   menuItemText: {
-    fontSize: 20
+    fontSize: 20,
+    color: '#333'
   }
 });
 

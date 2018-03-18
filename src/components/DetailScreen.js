@@ -44,21 +44,21 @@ class DetailScreen extends Component {
     .then((responseJson)=>{
       // Alert.alert('info',JSON.stringify(responseJson.data));
       var headerTitle = responseJson.data[0].title;
-      var max = 20;
+      var max = 90;
 
 
 //trim the string to the maximum length
 var trimmedString = headerTitle.substr(0, max);
 
 //re-trim if we are in the middle of a word
-trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")))
+trimmedString = headerTitle.length < 30 ? headerTitle : trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")))+'...';
 
       this.setState({
         refreshing:false,
         picture: 'http://10.42.0.1:8000/uploads/'+responseJson.data[0].photo,
         article: responseJson.data[0].content,
         title: responseJson.data[0].title,
-        titleHeader: trimmedString+'...'
+        titleHeader: trimmedString
       },function(){
 
       });
@@ -95,7 +95,7 @@ trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedSt
 
  <ParallaxScrollView
 
-            headerBackgroundColor="#333"
+            headerBackgroundColor="#1976D2"
             stickyHeaderHeight={ STICKY_HEADER_HEIGHT }
             parallaxHeaderHeight={ PARALLAX_HEADER_HEIGHT }
             backgroundSpeed={10}
@@ -149,7 +149,7 @@ onPress = {()=>{this.props.navigation.goBack()}}
             )}
 >
 <View>
-<HTMLView value={this.state.article}          
+<HTMLView style={styles.body} value={this.state.article}          
 />
 </View>
                 </ParallaxScrollView>
@@ -168,6 +168,9 @@ const PARALLAX_HEADER_HEIGHT = 200;
 const STICKY_HEADER_HEIGHT = 50;
 
 const styles = StyleSheet.create({
+  body: {
+    padding:5
+  },
   container: {
     flex: 1,
     backgroundColor: 'black'
@@ -181,8 +184,9 @@ const styles = StyleSheet.create({
   },
   stickySection: {
     height: STICKY_HEADER_HEIGHT,
-    width: 300,
-    justifyContent: 'flex-end'
+    width: window.width,
+    justifyContent: 'flex-end',
+    backgroundColor:'#1976D2'
   },
   stickySectionText: {
     color: 'white',

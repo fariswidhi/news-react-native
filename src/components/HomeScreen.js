@@ -19,13 +19,15 @@ import {
   ScrollView,
   TouchableHighlight,
   RefreshControl,
+  AsyncStorage,
+  TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
 
 import {
   StackNavigator,
 } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import App from '../../App';
 import DetailScreen from './DetailScreen';
@@ -57,7 +59,26 @@ class HomeScreen extends Component {
     static navigationOptions = ({navigation}) => 
     ({  
 
-      title: navigation.state.params == null ? 'Home': navigation.state.params.category
+      title: navigation.state.params == null ? 'Home': navigation.state.params.category,
+      header: <View
+    style={{
+      flexDirection: "row",
+      height: 50,
+      backgroundColor:'#1976D2',
+      marginTop: Platform.OS == "ios" ? 20 : 0 // only for IOS to give StatusBar Space
+    }}
+  >
+
+
+                <Icon.Button name="ios-menu" 
+  style={{width:40,height:20,marginTop:15,marginLeft:15}}
+backgroundColor='transparent'
+onPress = {()=>{navigation.navigate('DrawerOpen')}}
+  >
+  </Icon.Button>
+
+    <Text style={{marginTop:13,fontSize:20,fontWeight:'bold',color:'#fff'}}> {navigation.state.params == null ? 'Home': navigation.state.params.category}</Text>
+  </View>
     });
 
 
@@ -81,6 +102,8 @@ class HomeScreen extends Component {
 
   }
   fetch(){
+  this.fetchCategory();
+
     var url ='';
     if (this.state.params==null) {
       url = URL+'/api/articles';
@@ -104,6 +127,57 @@ class HomeScreen extends Component {
       // console.error(err);
 
     })
+
+  }
+
+  fetchCategory(){
+        return fetch('http://10.42.0.1:8000/api/categories')
+    .then((response)=>response.json())
+    .then((responseJson)=>{
+      // this.setState({
+      //   refreshing:false,
+      //   dataSource: responseJson.data
+      // },function(){
+
+      // });
+
+            AsyncStorage.getItem('data',(err,result)=>{
+
+            // Alert.alert('inof','in '+JSON.parse(result).length);
+
+            // Alert.alert('inof','in '+responseJson.data.length);
+
+            if (responseJson.data.length != JSON.parse(result).length) {
+                           
+              Alert.alert('info','a = '+responseJson.data);
+              AsyncStorage.removeItem('data');
+      AsyncStorage.setItem('data',JSON.stringify(responseJson.data));
+
+            }
+      //         if (!err) {
+      //   if (JSON.parse(result).length != responseJson.data.length) {
+      // AsyncStorage.removeItem('data');
+
+
+
+      // AsyncStorage.setItem('data',JSON.stringify(responseJson.data));                                                                                             
+
+      //   }
+      //   else{
+
+      //     Alert.alert('info','Data On AsyncStorage Not Found'+err);
+      //   }
+
+      //         }
+      });
+
+
+
+    })
+    .catch((err)=>{
+      // console.error(err);
+      Alert.alert('Info','Failed to Load'+err);
+    })                                  
 
   }
   componentDidMount(){
@@ -155,11 +229,11 @@ refreshControl={
   <RefreshControl
       refreshing={this.state.refreshing}
       onRefresh={this._onRefresh.bind(this)}
-      tintColor="#ff0000"
+      tintColor="#1976D2"
       title="Loading..."
-      titleColor="#ffffff"
-      colors={['#ffffff']}
-      progressBackgroundColor="#1976D2"
+      titleColor="#1976D2"
+      colors={['#1976D2']}
+      progressBackgroundColor="#fff"
   />
 }
   data={this.state.dataSource}
