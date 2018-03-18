@@ -40,16 +40,25 @@ type Props = {};
 
 class HomeScreen extends Component {
 
-    static navigationOptions = {  title: "Home" };
-
 
   constructor(props) {
     super(props);
+    const { params } = this.props.navigation.state;
     this._onPress = this._onPress.bind(this);
+    const id = params ? params.slug : null;
+    const categoriesName = params ? params.category : null;
     this.state = {
+      params : id,
       refreshing: false
     }
+
   }
+
+    static navigationOptions = ({navigation}) => 
+    ({  
+
+      title: navigation.state.params == null ? 'Home': navigation.state.params.category
+    });
 
 
 
@@ -72,8 +81,16 @@ class HomeScreen extends Component {
 
   }
   fetch(){
+    var url ='';
+    if (this.state.params==null) {
+      url = URL+'/api/articles';
+    }
+    else{
+
+      url = URL+'/api/categories/'+this.state.params;
+    }
     this.setState({refreshing:true});
-    return fetch(URL+'api/articles')
+    return fetch(url)
     .then((response)=>response.json())
     .then((responseJson)=>{
       this.setState({
